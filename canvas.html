@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+    <head>
+        <title>canvasExample</title>
+        <meta charset='utf-8' />
+    </head>
+    <body>
+        <canvas width='800' height='600' id='example'>Обновите браузер</canvas>
+        <script>
+            GLOBAL_SCALE = 0.005;
+			ENTER_HADLED = false;
+			global_i = 0;
+			var mA=0,mX=0,mY=0,mW=0,mT=0,oldX=0,oldY=0,speed=0;
+			var example = document.getElementById("example"),
+                ctx     = example.getContext('2d');
+			document.addEventListener('keydown', function(event) {
+				/*if (event.keyCode == 37) {
+					alert('Left was pressed');
+				}*/
+				if(event.keyCode == 13)
+				{
+					ENTER_HADLED = true;
+					myiter(ctx);
+				}
+				if(event.keyCode == 81)
+				{
+					changespeed();
+				}
+			}, true);
+			function myiter(ctx)
+			{
+				if(global_i%speed == 0)
+					global_i++;
+				while(global_i%speed != 0)
+				{
+					mT = global_i/1000;
+					mX = mA * Math.cos(mW*mT);
+					mY = mA * Math.sin(mW*mT);
+					ctx.beginPath();
+					ctx.moveTo(getx(oldX),gety(oldY));
+					ctx.lineTo(getx(mX),gety(mY));
+					ctx.stroke();
+					oldX = mX;
+					oldY = mY;
+					ENTER_HADLED = false;
+					global_i++;
+				}
+			}
+			function getx(par_x) {
+				return (par_x/GLOBAL_SCALE+400);
+			}
+			function gety(par_y) {
+				return (-par_y/GLOBAL_SCALE+300);
+			}
+			function drawgrid(ctx) {
+				var tempwidth = ctx.lineWidth;
+				var tempstyle = ctx.strokeStyle;
+				ctx.beginPath();
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#777";
+				ctx.moveTo(400,0);
+				ctx.lineTo(400,600);
+				ctx.stroke();
+				ctx.beginPath();
+				ctx.moveTo(0,300);
+				ctx.lineTo(800,300);
+				ctx.stroke();
+				ctx.lineWidth = tempwidth;
+				ctx.strokeStyle = tempstyle;
+			}
+			function myround(num) {
+				return (Math.round(num*10000000)/10000000);
+			}		
+			function drawmyfunc(ctx) {
+				ctx.lineWidth = 0.5;
+				mA = prompt("Введи А:",1);
+				mW = prompt("Введи w:",1);	
+				changespeed();
+			}
+			function changespeed()
+			{
+				speed = prompt("Скорость:",20);
+			}
+            ctx.strokeRect(0, 0, example.width, example.height);
+			drawgrid(ctx);
+			drawmyfunc(ctx);
+        </script>
+    </body>
+</html>
